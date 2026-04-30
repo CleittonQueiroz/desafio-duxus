@@ -3,6 +3,7 @@ package br.com.duxusdesafio.service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -28,10 +29,9 @@ public class ApiService {
         // TODO Implementar método seguindo as instruções!
     	// Optei por usar Stream para manter o código organizado, como um fluxo de processo.
     	return todosOsTimes.stream() 
-    			.filter(t -> t.getData() != null && t.getData().equals(data))
+    			.filter(time -> time.getData() != null && time.getData().equals(data))
     			.findFirst() 
-    			.orElse(null);
-    
+    			.orElse(null);    
     }
 
     /**
@@ -40,8 +40,24 @@ public class ApiService {
      */
     public Integrante integranteMaisUsado(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes){
         // TODO Implementar método seguindo as instruções!
-        return null;
-    }
+    	// Processa o fluxo de times, filtro por período opcional, 
+    	// e utiliza contagem por agrupamento para encontrar o integrante de maior frequência.
+
+    	if (todosOsTimes == null || todosOsTimes.isEmpty()) {
+            return null;
+        }
+        return todosOsTimes.stream()
+                .filter(time -> time.getData() != null)
+                .filter(time -> dataInicial == null || !time.getData().isBefore(dataInicial))
+                .filter(time -> dataFinal == null || !time.getData().isAfter(dataFinal))
+                .flatMap(time -> time.getComposicaoTime().stream())
+                .map(composicao -> composicao.getIntegrante())
+                .collect(Collectors.groupingBy(integrante -> integrante, Collectors.counting()))
+                .entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(entrada -> entrada.getKey())
+                .orElse(null);
+    }    	
 
     /**
      * Vai retornar uma lista com os nomes dos integrantes do time mais recorrente dentro do período.
