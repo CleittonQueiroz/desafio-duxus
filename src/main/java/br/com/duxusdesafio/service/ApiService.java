@@ -1,12 +1,13 @@
 package br.com.duxusdesafio.service;
 
-import br.com.duxusdesafio.model.Integrante;
-import br.com.duxusdesafio.model.Time;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.stereotype.Service;
+
+import br.com.duxusdesafio.model.Integrante;
+import br.com.duxusdesafio.model.Time;
 
 /**
  * Service que possuirá as regras de negócio para o processamento dos dados
@@ -25,7 +26,12 @@ public class ApiService {
      */
     public Time timeDaData(LocalDate data, List<Time> todosOsTimes){
         // TODO Implementar método seguindo as instruções!
-        return null;
+    	// Optei por usar Stream para manter o código organizado, como um fluxo de processo.
+    	return todosOsTimes.stream() 
+    			.filter(t -> t.getData() != null && t.getData().equals(data))
+    			.findFirst() 
+    			.orElse(null);
+    
     }
 
     /**
