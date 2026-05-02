@@ -1,6 +1,7 @@
 package br.com.duxusdesafio.service;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -18,7 +19,7 @@ import br.com.duxusdesafio.model.Time;
  * Trabalhe com a proposta pura.
  *
  * @author carlosau
- */
+ */ 
 @Service
 public class ApiService {
 
@@ -28,12 +29,14 @@ public class ApiService {
     public Time timeDaData(LocalDate data, List<Time> todosOsTimes){
         // TODO Implementar método seguindo as instruções!
     	// Optei por usar Stream para manter o código organizado, como um fluxo de processo.
+    	if (todosOsTimes == null || todosOsTimes.isEmpty() || data == null) {
+    	    return null;
+    	} 
     	return todosOsTimes.stream() 
-    			.filter(time -> time.getData() != null && time.getData().equals(data))
+    			.filter(time -> data.equals(time.getData()))
     			.findFirst() 
     			.orElse(null);    
     }
-
     /**
      * Vai retornar o integrante que estiver presente na maior quantidade de times
      * dentro do período
@@ -57,16 +60,32 @@ public class ApiService {
                 .max(Map.Entry.comparingByValue())
                 .map(entrada -> entrada.getKey())
                 .orElse(null);
-    }    	
-
+    }
     /**
      * Vai retornar uma lista com os nomes dos integrantes do time mais recorrente dentro do período.
      * OBS: Time é o clube + composição em determinada data
      */
-    public List<String> integrantesDoTimeMaisRecorrente(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes){
-        // TODO Implementar método seguindo as instruções!
-        return null;
-    }
+    public List<String> integrantesDoTimeMaisRecorrente(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes) {
+    	 if (todosOsTimes == null || todosOsTimes.isEmpty()) {
+    	        return null;
+    	    }
+    	    return todosOsTimes.stream()    	   
+    	            .filter(time -> time.getData() != null)
+    	            .filter(time -> dataInicial == null || !time.getData().isBefore(dataInicial))
+    	            .filter(time -> dataFinal == null || !time.getData().isAfter(dataFinal))    	            
+    	            .collect(Collectors.groupingBy(
+    	                    time -> time.getNomeDoClube() + "|" +
+    	                            time.getComposicaoTime().stream()
+    	                                    .map(composicao -> composicao.getIntegrante().getNome())
+    	                                    .sorted()
+    	                                    .collect(Collectors.joining(",")),
+    	                    Collectors.counting()))    
+    	            .entrySet().stream()
+    	            .max(Map.Entry.comparingByValue())    	       
+    	            .map(entry -> entry.getKey().split("\\|")[1])    	          
+    	            .map(nomes -> Arrays.asList(nomes.split(",")))
+    	            .orElse(null);
+    	}
 
     /**
      * Vai retornar a função mais recorrente nos times dentro do período
