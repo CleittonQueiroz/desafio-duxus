@@ -92,9 +92,22 @@ public class ApiService {
      */
     public String funcaoMaisRecorrente(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes){
         // TODO Implementar método seguindo as instruções!
-        return null;
-    }
-
+    	if (todosOsTimes == null || todosOsTimes.isEmpty()) {
+    		return null;
+    	}
+    	return todosOsTimes.stream()
+    			.filter(time -> time.getData() != null)
+    			.filter(time -> dataInicial == null || !time.getData().isBefore(dataInicial))
+    			.filter(time -> dataFinal == null || !time.getData().isAfter(dataFinal))
+    			.flatMap(time -> time.getComposicaoTime().stream())
+    			.map(composicao -> composicao.getIntegrante().getFuncao())
+    			.collect(Collectors.groupingBy(funcao -> funcao, Collectors.counting()))
+    			.entrySet().stream()
+    			.max(Map.Entry.comparingByValue())
+    			.map(entrada -> entrada.getKey())
+    			.orElse(null);    			
+    	}
+    
     /**
      * Vai retornar o nome do Clube mais comum dentro do período
      */
