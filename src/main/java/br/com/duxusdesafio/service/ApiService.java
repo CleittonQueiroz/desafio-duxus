@@ -134,9 +134,17 @@ public class ApiService {
      */
     public Map<String, Long> contagemDeClubesNoPeriodo(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes){
         // TODO Implementar método seguindo as instruções!
-        return null;
-    }
+    	if (todosOsTimes == null || todosOsTimes.isEmpty()) {
+    		return null;
+    		}
 
+    		return todosOsTimes.stream()
+    		.filter(time -> time.getData() != null)
+    		.filter(time -> dataInicial == null || !time.getData().isBefore(dataInicial))
+    		.filter(time -> dataFinal == null || !time.getData().isAfter(dataFinal))
+    		.map(time -> time.getNomeDoClube())
+    		.collect(Collectors.groupingBy(clube -> clube, Collectors.counting()));
+    		}
     /**
      * Vai retornar o número (quantidade) de Funções dentro do período.
      * Dica - pense sobre repetições!
