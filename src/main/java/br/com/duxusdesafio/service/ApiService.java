@@ -141,9 +141,18 @@ public class ApiService {
      * Vai retornar o número (quantidade) de Funções dentro do período.
      * Dica - pense sobre repetições!
      */
-    public Map<String, Long> contagemPorFuncao(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes){
-        // TODO Implementar método seguindo as instruções!
-        return null;
-    }
+    public Map<String, Long> contagemPorFuncao(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes) {
+    	 if (todosOsTimes == null || todosOsTimes.isEmpty()) {
+    	        return null;
+    	    }
 
+    	    return todosOsTimes.stream()
+    	            .filter(time -> time.getData() != null)
+    	            .filter(time -> dataInicial == null || !time.getData().isBefore(dataInicial))
+    	            .filter(time -> dataFinal == null || !time.getData().isAfter(dataFinal))
+    	            .flatMap(time -> time.getComposicaoTime().stream())
+    	            .map(composicao -> composicao.getIntegrante())
+    	            .distinct()
+    	            .collect(Collectors.groupingBy(integrante -> integrante.getFuncao(), Collectors.counting()));    	
+    }
 }
