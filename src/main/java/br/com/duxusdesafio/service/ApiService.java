@@ -51,6 +51,8 @@ public class ApiService {
         }
         return todosOsTimes.stream()
                 .filter(time -> time.getData() != null)
+             // Considera apenas times dentro do período informado.
+             // Caso dataInicial ou dataFinal sejam null, o filtro é ignorado.
                 .filter(time -> dataInicial == null || !time.getData().isBefore(dataInicial))
                 .filter(time -> dataFinal == null || !time.getData().isAfter(dataFinal))
                 .flatMap(time -> time.getComposicaoTime().stream())
@@ -113,10 +115,20 @@ public class ApiService {
      */
     public String clubeMaisRecorrente(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes) {
         // TODO Implementar método seguindo as instruções!
-        return null;
-    }
-
-
+    	if (todosOsTimes == null || todosOsTimes.isEmpty()) {
+    		return null;
+    	}
+    	return todosOsTimes.stream()
+    			.filter(time -> time.getData() != null)
+    			.filter(time -> dataInicial == null || !time.getData().isBefore(dataInicial))
+    			.filter(time -> dataFinal == null || !time.getData().isAfter(dataFinal))
+    			.map(time -> time.getNomeDoClube())
+    			.collect(Collectors.groupingBy(clube -> clube, Collectors.counting()))
+    			.entrySet().stream()
+    			.max(Map.Entry.comparingByValue())
+    			.map(entrada -> entrada.getKey())
+    			.orElse(null);    			
+    	}		
     /**
      * Vai retornar o número (quantidade) de aparições de cada Clube participante no período
      */
