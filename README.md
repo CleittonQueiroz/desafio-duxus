@@ -1,6 +1,6 @@
 # Desafio Duxus - API REST com Spring Boot
 
-Este projeto foi desenvolvido como solução para o desafio técnico proposto pela Duxus, com foco na organização do código, boas práticas e implementação das funcionalidades solicitadas.
+Este projeto foi desenvolvido como solução para o desafio técnico proposto pela Élin Duxus, com foco na implementação das funcionalidades solicitadas a partir de uma base de código já existente. O principal objetivo foi trabalhar o processamento de dados e a lógica de negócio, buscando organização e clareza na implementação.
 
 ---
 
@@ -12,11 +12,12 @@ O desafio consiste em complementar uma base de código existente para gerenciar 
 
 ## Tecnologias utilizadas
 
-- Java 8+
+- Java (uso de Streams)
 - Spring Boot
 - Spring Data JPA
 - H2 Database (em memória)
 - Maven
+- Postman (testes e validação dos endpoints REST)
 
 ---
 
@@ -34,9 +35,7 @@ cd desafio-duxus
 
 Via IDE (Spring Tool Suite, IntelliJ ou Eclipse)
 
-Ou via terminal:
-
-./mvnw spring-boot:run
+Ou via terminal: ./mvnw spring-boot:run
 
 ---
 
@@ -50,8 +49,7 @@ http://localhost:8080
 
 ## Banco de dados (H2)
 
-Console:
-
+Console:  
 http://localhost:8080/h2-console
 
 Configurações:
@@ -77,31 +75,23 @@ Password: (em branco)
 
 ## Decisões técnicas
 
+- Implementação dos métodos propostos no ApiService
 - Uso de Java Streams para processamento de dados
 - Utilização de Collectors.groupingBy para cálculos de frequência
-- Separação em camadas (Controller, Service, Repository)
-- Banco de dados em memória (H2)
+- Implementação de endpoints REST para cadastro e consulta
+- Uso de banco de dados em memória (H2) para facilitar execução
 
 ---
 
 ## Melhorias possíveis
 
 - Implementação de testes automatizados
-- Tratamento global de exceções
-- Validações mais robustas
-- Documentação com Swagger
-- Uso de banco persistente
-
----
-
-## Autor
-
-Cleiton Marques Queiroz  
-GitHub: https://github.com/CleittonQueiroz  
-LinkedIn: https://www.linkedin.com/in/cleitonqueiroz/
+- Tratamento de exceções
+- Validações mais completas
+- Uso de banco de dados persistente
 
 ---
 
 ## Observação
 
-O projeto foi desenvolvido priorizando a entrega funcional dentro do prazo proposto, mantendo organização e clareza no código.
+O projeto foi desenvolvido a partir de uma estrutura pré-existente, com foco na implementação das regras de negócio e no processamento dos dados conforme solicitado no desafio.
