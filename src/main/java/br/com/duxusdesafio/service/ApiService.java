@@ -137,7 +137,6 @@ public class ApiService {
     	if (todosOsTimes == null || todosOsTimes.isEmpty()) {
     		return null;
     		}
-
     		return todosOsTimes.stream()
     		.filter(time -> time.getData() != null)
     		.filter(time -> dataInicial == null || !time.getData().isBefore(dataInicial))
