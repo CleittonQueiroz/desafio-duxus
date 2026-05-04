@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "time")
@@ -33,6 +34,7 @@ public class Time {
     /**
      * Elenco ou equipe - o conjunto de integrantes desse time
      */
+	@JsonIgnore
 	@OneToMany(mappedBy = "time", cascade = CascadeType.ALL)
 	private List<ComposicaoTime> composicaoTime;
 

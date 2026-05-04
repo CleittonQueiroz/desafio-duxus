@@ -24,14 +24,4 @@ public class IntegranteController {
     public List<Integrante> listarTodos() {
         return integranteRepository.findAll();
     }
-
-    @GetMapping("/{id}")
-    public Integrante buscarPorId(@PathVariable Long id) {
-        return integranteRepository.findById(id).orElse(null);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id) {
-        integranteRepository.deleteById(id);
-    }
 }
