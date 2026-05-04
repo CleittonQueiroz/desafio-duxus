@@ -1,172 +1,107 @@
+# Desafio Duxus - API REST com Spring Boot
 
-# Desafio de Desenvolvimento
+Este projeto foi desenvolvido como solução para o desafio técnico proposto pela Duxus, com foco na organização do código, boas práticas e implementação das funcionalidades solicitadas.
 
-O objetivo deste desafio é obter uma ideia das habilidades que o candidato possui, da organização de tempo e também do código.
+---
 
-## Considerações Importantes – Por favor, leia com atenção:
+## Sobre o desafio
 
-- O desafio já tem códigos pré prontos para você completar as funcionalidades. Não é preciso reinventar a roda! Use o que existe!
+O desafio consiste em complementar uma base de código existente para gerenciar times e integrantes, permitindo consultas e análises com base nos dados cadastrados.
 
-- Use seu tempo de forma inteligente: Uma solução simples primeiro e depois avance.
+---
 
-- Comentários sempre são bem-vindos em métodos ou estruturas mais complexas.
+## Tecnologias utilizadas
 
-- Parece não intuitivo, mas deixe as telas por último, pense na estrutura dos dados e nos métodos de gravação e exportação primeiro.
+- Java 8+
+- Spring Boot
+- Spring Data JPA
+- H2 Database (em memória)
+- Maven
 
-- Utilize os testes unitários já existentes e crie novos também, isso é importante. Não existe necessidade de 100% de cobertura, mas use-os para experimentar e validar sua solução – **é muito importante que os testes já existentes estejam passando após a sua implementação!**
+---
 
-- Faça commits frequentes, assim podemos ver a evolução da sua solução.
+## Como executar o projeto
 
-- Sobre banco de dados, você pode usar qualquer um que esteja acostumado, inclusive em memória, se preferir. Aqui utilizamos, comumente: PostgreSQL, Microsoft SQL Server, Oracle DB, MySQL e, especialmente para testes, HSQLDB. 
+### Clonar o repositório
 
-- Entregue tudo o que conseguir fazer, indiferente de estar completo ou não.
+git clone https://github.com/CleittonQueiroz/desafio-duxus.git
 
-- Durante o período de teste, fique à vontade para enviar dúvidas ao recrutador.
+### Acessar a pasta do projeto
 
-- Ao final, deixamos alguns links que podem ser úteis para consulta, mas você pode consultar qualquer material, à vontade.
+cd desafio-duxus
 
-- Nos envie, ao final, uma descrição com detalhes de como podemos testar a sua implementação.
+### Executar a aplicação
 
-## O que você deve implementar:
+Via IDE (Spring Tool Suite, IntelliJ ou Eclipse)
 
-Imagine que você quer fazer um sistema de escalação de times. Toda semana você vai montar um time vencedor. 
+Ou via terminal:
 
-Não importa se é Esporte tradicional ou eSports.
+./mvnw spring-boot:run
 
-Exemplos de Esporte tradicional : Futebol, Basquete.
+---
 
-Exemplos de eSports : Counter Strike, Valorant, Free Fire, League of Legends, APEX.
+## Acesso à aplicação
 
-Sua tarefa é construir a melhor solução no tempo combinado, considerando os requisitos que estarão descritos abaixo.
+Após iniciar, a aplicação estará disponível em:
 
-Você pode usar a criatividade pois não existe uma solução definitiva para o desafio.
+http://localhost:8080
 
-Abaixo, mais detalhes:
+---
 
-## Estrutura dos Dados
+## Banco de dados (H2)
 
-### Tabela de "Integrante" :
+Console:
 
-- Id
-- Nome
-- Função
+http://localhost:8080/h2-console
 
-### Tabela de Time:
+Configurações:
 
-- Id
-- Nome do Clube
-- Data
+JDBC URL: jdbc:h2:mem:duxusdb  
+User: sa  
+Password: (em branco)
 
-### Tabela de ComposicaoTime:
+---
 
-- Id
-- Id_Time  (foreign key tabela Time)
-- Id_Integrante  (foreign key tabela Integrante)
+## Funcionalidades implementadas
 
-## Funcionalidades Principais
+- Cadastro de integrantes
+- Cadastro de times
+- Associação de integrantes aos times
+- Consulta por período
+- Integrante mais utilizado
+- Função mais recorrente
+- Clube mais frequente
+- Contagem de participações no período
 
-### 1) Tratamento de dados – PASSO MAIS IMPORTANTE DO DESAFIO, foque nessa etapa primeiro.
+---
 
-Esse passo é o mais importante no teste porque gostaríamos de medir a sua capacidade de lidar com estruturas de dados. 
+## Decisões técnicas
 
-Já existe um service criado no projeto (ApiService), com métodos para serem implementados, e testes unitários para eles. Utilize-os!
+- Uso de Java Streams para processamento de dados
+- Utilização de Collectors.groupingBy para cálculos de frequência
+- Separação em camadas (Controller, Service, Repository)
+- Banco de dados em memória (H2)
 
-Sendo possível, crie novos testes unitários, aumente os cases dos testes atuais, amplie essa cobertura de testes, pois é muito importante garantir que o código esteja atendendo corretamente o que se pede.
+---
 
-No quadro, alguns detalhes sobre os métodos:
+## Melhorias possíveis
 
-| Método  | Parâmetros | Descrição |
-|--|--|--|
-| TimeDaData | Data, Lista de todos os Times                              | Vai retornar um Time, com a composição do time daquela data                                 |
-| IntegranteMaisUsado | Data inicial e Data final (podem ser null), Lista de todos os Times | Vai retornar o integrante que tiver presente na maior quantidade de times dentro do período |
-| IntegrantesDoTimeMaisRecorrente | Data inicial e Data final (podem ser null), Lista de todos os Times | Vai retornar uma lista com os nomes dos integrantes do time mais recorrente dentro do período    |
-| FuncaoMaisRecorrente | Data inicial e Data final (podem ser null), Lista de todos os Times | Vai retornar a função mais recorrente nos times dentro do período                                |
-| ClubeMaisRecorrente | Data inicial e Data final (podem ser null), Lista de todos os Times |Vai retornar o nome do Clube mais comum dentro do período                      |
-| ContagemDeClubesNoPeriodo | Data inicial e Data final (podem ser null), Lista de todos os Times | Vai retornar o número (quantidade) de aparições de cada Clube participante no período                           |
-| ContagemPorFuncao | Data inicial e Data final (podem ser null), Lista de todos os Times | Vai retornar o número (quantidade) de Funções dentro do período                             |
+- Implementação de testes automatizados
+- Tratamento global de exceções
+- Validações mais robustas
+- Documentação com Swagger
+- Uso de banco persistente
 
-## Funcionalidades Extras
-### 2) API de Cadastro
+---
 
-Lembrando: a prioridade é a funcionalidade correta, não as telas. 
+## Autor
 
-#### Cadastro de Integrantes
+Cleiton Marques Queiroz  
+GitHub: https://github.com/CleittonQueiroz  
+LinkedIn: https://www.linkedin.com/in/cleitonqueiroz/
 
-Fazer um cadastro de integrantes para os times.
+---
 
-#### Cadastro de Times
+## Observação
 
-Fazer um cadastro de times onde não importa muito a quantidade de integrantes. 
-
-Para cadastrar um time para uma determinada semana basta escolher os personagens/integrantes que farão parte dele.
-
-
-### 3) API para processamento de Dados
-
-Seu sistema vai processar as informações do banco de dados e vai exportá-las através de endpoints.
-
-Você deve usar os selects para trazer todos os dados, mas processe eles na linguagem, através dos métodos implementados no passo 1.
-
-| Endpoint  | Parâmetros |
-|--|--|
-| TimeDaData | Data | 
-| IntegrantesDoTimeMaisRecorrente | Data inicial e Data final (podem ser null) |
-| IntegranteMaisUsado | Data inicial e Data final (podem ser null) |
-| FuncaoMaisRecorrente | Data inicial e Data final (podem ser null) |
-| ClubeMaisRecorrente | Data inicial e Data final (podem ser null) |
-| ContagemDeClubesNoPeriodo | Data inicial e Data final (podem ser null) |
-| ContagemPorFuncao | Data inicial e Data final (podem ser null) |
-
-Exemplos de Resultados esperados:
-
-TimeDaData
-``` 
-{
-  "data": 2021-01-15,
-  "clube": "Falcons",
-  "integrantes": [ "Bangalore", "BloodHound", "Crypto" ]
-}
-```
-
-FuncaoMaisRecorrente
-``` 
-{
-  "Função" : "Meia"
-}
-```
-
-ContagemDeClubesNoPeriodo
-``` 
-{
-  "Falcons": 5,
-  "FURIA": 2,
-  "DarkZero Esports": 3
-}
-```
-
-
-### 4) Telas
-
-Conforme já foi dito as telas de cadastro tem prioridade menor do que o funcionamento da API.
-
-Você pode fazer as telas da maneira mais simples possível e usar qualquer framework que facilite o desenvolvimento.
-
-- Tela de Inserção de Integrantes
-    - Um formulário com os campos é suficiente
-- Tela de Montagem de Times pode ser feita de diversas maneiras, algumas sugestões:
-    - Fazer uma listagem e colocar um checkbox ao lado de cada integrante
-    - Fazer um "transfer" usando dois "selects" de html
-    - Usar um componente de jquery ( https://www.jqueryscript.net/blog/best-multiple-select.html )
-
-Não se sinta obrigado a utilizar algo dessas sugestões, fique à vontade para utilizar o que tiver mais domínio ou preferência.
-
-O importante é a tela estar funcional e a beleza não será avaliada.
-
-## Alguns links úteis para consulta
-
-- https://www.baeldung.com/java-collections
-- https://www.baeldung.com/java-8-streams-introduction
-- https://pt.linkedin.com/pulse/tdd-com-java-junit-e-mockito-tiago-perroni
-- https://www.devmedia.com.br/rest-tutorial/28912
-- https://www.baeldung.com/rest-with-spring-series
-- https://www.baeldung.com/jackson-vs-gson
+O projeto foi desenvolvido priorizando a entrega funcional dentro do prazo proposto, mantendo organização e clareza no código.
