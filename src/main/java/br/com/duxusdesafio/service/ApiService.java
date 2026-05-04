@@ -21,18 +21,26 @@ import br.com.duxusdesafio.model.Time;
  * @author carlosau
  */ 
 @Service
-public class ApiService {
 
+public class ApiService {	
+	
+	/**
+	 * Verifica se um time está dentro do período informado.
+	 * Caso data inicial ou final sejam nulas, o filtro é ignorado.
+	 */
+	 private boolean dentroDoPeriodo(Time time, LocalDate inicio, LocalDate fim) {
+	        return (inicio == null || !time.getData().isBefore(inicio)) &&
+	               (fim == null || !time.getData().isAfter(fim));
+	    }
     /**
      * Vai retornar um Time, com a composição do time daquela data
      */
-    public Time timeDaData(LocalDate data, List<Time> todosOsTimes){
-        // TODO Implementar método seguindo as instruções!
-    	// Optei por usar Stream para manter o código organizado, como um fluxo de processo.
+    public Time timeDaData(LocalDate data, List<Time> todosOsTimes){   
     	if (todosOsTimes == null || todosOsTimes.isEmpty() || data == null) {
     	    return null;
     	} 
-    	return todosOsTimes.stream() 
+     	// Optei por usar Stream para manter o código organizado, como um fluxo de processo.
+    	return todosOsTimes.stream()     			
     			.filter(time -> data.equals(time.getData()))
     			.findFirst() 
     			.orElse(null);    
@@ -41,8 +49,7 @@ public class ApiService {
      * Vai retornar o integrante que estiver presente na maior quantidade de times
      * dentro do período
      */
-    public Integrante integranteMaisUsado(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes){
-        // TODO Implementar método seguindo as instruções!
+    public Integrante integranteMaisUsado(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes){      
     	// Processa o fluxo de times, filtro por período opcional, 
     	// e utiliza contagem por agrupamento para encontrar o integrante de maior frequência.
 
@@ -51,16 +58,14 @@ public class ApiService {
         }
         return todosOsTimes.stream()
                 .filter(time -> time.getData() != null)
-             // Considera apenas times dentro do período informado.
-             // Caso dataInicial ou dataFinal sejam null, o filtro é ignorado.
-                .filter(time -> dataInicial == null || !time.getData().isBefore(dataInicial))
-                .filter(time -> dataFinal == null || !time.getData().isAfter(dataFinal))
+                	// filtro por período opcional
+                .filter(time -> dentroDoPeriodo(time, dataInicial, dataFinal))
                 .flatMap(time -> time.getComposicaoTime().stream())
-                .map(composicao -> composicao.getIntegrante())
+                .map(composicao -> composicao.getIntegrante()) 
                 .collect(Collectors.groupingBy(integrante -> integrante, Collectors.counting()))
                 .entrySet().stream()
-                .max(Map.Entry.comparingByValue())
-                .map(entrada -> entrada.getKey())
+                .max(Map.Entry.comparingByValue()) 
+                .map(entrada -> entrada.getKey()) 
                 .orElse(null);
     }
     /**
@@ -73,8 +78,7 @@ public class ApiService {
     	    }
     	    return todosOsTimes.stream()    	   
     	            .filter(time -> time.getData() != null)
-    	            .filter(time -> dataInicial == null || !time.getData().isBefore(dataInicial))
-    	            .filter(time -> dataFinal == null || !time.getData().isAfter(dataFinal))    	            
+    	            .filter(time -> dentroDoPeriodo(time, dataInicial, dataFinal))            
     	            .collect(Collectors.groupingBy(
     	                    time -> time.getNomeDoClube() + "|" +
     	                            time.getComposicaoTime().stream()
@@ -93,14 +97,12 @@ public class ApiService {
      * Vai retornar a função mais recorrente nos times dentro do período
      */
     public String funcaoMaisRecorrente(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes){
-        // TODO Implementar método seguindo as instruções!
     	if (todosOsTimes == null || todosOsTimes.isEmpty()) {
     		return null;
     	}
     	return todosOsTimes.stream()
     			.filter(time -> time.getData() != null)
-    			.filter(time -> dataInicial == null || !time.getData().isBefore(dataInicial))
-    			.filter(time -> dataFinal == null || !time.getData().isAfter(dataFinal))
+    			.filter(time -> dentroDoPeriodo(time, dataInicial, dataFinal))
     			.flatMap(time -> time.getComposicaoTime().stream())
     			.map(composicao -> composicao.getIntegrante().getFuncao())
     			.collect(Collectors.groupingBy(funcao -> funcao, Collectors.counting()))
@@ -113,15 +115,13 @@ public class ApiService {
     /**
      * Vai retornar o nome do Clube mais comum dentro do período
      */
-    public String clubeMaisRecorrente(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes) {
-        // TODO Implementar método seguindo as instruções!
+    public String clubeMaisRecorrente(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes) {      
     	if (todosOsTimes == null || todosOsTimes.isEmpty()) {
     		return null;
     	}
     	return todosOsTimes.stream()
     			.filter(time -> time.getData() != null)
-    			.filter(time -> dataInicial == null || !time.getData().isBefore(dataInicial))
-    			.filter(time -> dataFinal == null || !time.getData().isAfter(dataFinal))
+    			.filter(time -> dentroDoPeriodo(time, dataInicial, dataFinal))
     			.map(time -> time.getNomeDoClube())
     			.collect(Collectors.groupingBy(clube -> clube, Collectors.counting()))
     			.entrySet().stream()
@@ -132,15 +132,13 @@ public class ApiService {
     /**
      * Vai retornar o número (quantidade) de aparições de cada Clube participante no período
      */
-    public Map<String, Long> contagemDeClubesNoPeriodo(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes){
-        // TODO Implementar método seguindo as instruções!
+    public Map<String, Long> contagemDeClubesNoPeriodo(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes){       
     	if (todosOsTimes == null || todosOsTimes.isEmpty()) {
     		return null;
     		}
     		return todosOsTimes.stream()
     		.filter(time -> time.getData() != null)
-    		.filter(time -> dataInicial == null || !time.getData().isBefore(dataInicial))
-    		.filter(time -> dataFinal == null || !time.getData().isAfter(dataFinal))
+    		.filter(time -> dentroDoPeriodo(time, dataInicial, dataFinal))
     		.map(time -> time.getNomeDoClube())
     		.collect(Collectors.groupingBy(clube -> clube, Collectors.counting()));
     		}
@@ -152,14 +150,11 @@ public class ApiService {
     	 if (todosOsTimes == null || todosOsTimes.isEmpty()) {
     	        return null;
     	    }
-
     	    return todosOsTimes.stream()
     	            .filter(time -> time.getData() != null)
-    	            .filter(time -> dataInicial == null || !time.getData().isBefore(dataInicial))
-    	            .filter(time -> dataFinal == null || !time.getData().isAfter(dataFinal))
+    	            .filter(time -> dentroDoPeriodo(time, dataInicial, dataFinal))
     	            .flatMap(time -> time.getComposicaoTime().stream())
-    	            .map(composicao -> composicao.getIntegrante())
-    	            .distinct()
+    	            .map(composicao -> composicao.getIntegrante())    	           
     	            .collect(Collectors.groupingBy(integrante -> integrante.getFuncao(), Collectors.counting()));    	
     }
 }
