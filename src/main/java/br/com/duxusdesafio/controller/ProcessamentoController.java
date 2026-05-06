@@ -11,6 +11,8 @@ import br.com.duxusdesafio.model.Integrante;
 import br.com.duxusdesafio.model.Time;
 import br.com.duxusdesafio.repository.TimeRepository;
 import br.com.duxusdesafio.service.ApiService;
+import java.util.HashMap;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -27,8 +29,22 @@ public class ProcessamentoController {
     }
 
     @GetMapping("/time-da-data")
-    public Time timeDaData(@RequestParam String data) {
-        return apiService.timeDaData(converterData(data), timeRepository.findAll());
+    public Map<String, Object> timeDaData(@RequestParam String data) {
+        Time time = apiService.timeDaData(converterData(data), timeRepository.findAll());
+
+        if (time == null) {
+            return null;
+        }
+
+        Map<String, Object> resposta = new HashMap<>();
+        resposta.put("data", time.getData());
+        resposta.put("clube", time.getNomeDoClube());
+        resposta.put("integrantes", time.getComposicaoTime()
+                .stream()
+                .map(composicao -> composicao.getIntegrante().getNome())
+                .collect(Collectors.toList()));
+
+        return resposta;
     }
 
     @GetMapping("/integrantes-do-time-mais-recorrente")
